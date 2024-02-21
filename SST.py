@@ -131,65 +131,69 @@ def Train(train_loader, model, criterion, optimizer, writer, epoch, args):
 
     end = time.time()
     for batchIndex, (sampleIndex, input, target, groundTruth) in enumerate(train_loader):
+        try:
         
-        input, target = input.cuda(), target.float().cuda()
-
-        # Log time of loading data
-        data_time.update(time.time() - end)
-
-        # Forward
-        output, intraCoOccurrence, feature = model(input)
-
-        model.updateFeature(feature, target, args.interExampleNumber)
-
-        intraTarget = getIntraPseudoLabel(intraCoOccurrence,
-                                          target,
-                                          margin=args.intraBCEMargin) if epoch >= args.generateLabelEpoch else target
-        
-        interTarget = getInterPseudoLabel(feature, target,
-                                          model.posFeature,
-                                          margin=args.interBCEMargin) if epoch >= args.generateLabelEpoch else target
-        
-        # Compute and log loss
-        loss1_ = criterion['BCELoss'](output, target)
-
-        loss2_ = args.intraBCEWeight * criterion['IntraBCELoss'](output, intraTarget) if epoch >= args.generateLabelEpoch else \
-                 0 * criterion['IntraBCELoss'](output, intraTarget)
-        loss3_ = args.intraCooccurrenceWeight * criterion['IntraCooccurrenceLoss'](intraCoOccurrence, target) if epoch >= 1 else \
-                 args.intraCooccurrenceWeight * criterion['IntraCooccurrenceLoss'](intraCoOccurrence, target) * batchIndex / float(len(train_loader))
-
-        loss4_ = args.interBCEWeight * criterion['InterBCELoss'](output, interTarget) if epoch >= args.generateLabelEpoch else \
-                 0 * criterion['InterBCELoss'](output, interTarget)
-        loss5_ = args.interDistanceWeight * criterion['InterDistanceLoss'](feature, target) if epoch >= 1 else \
-                 args.interDistanceWeight * criterion['InterDistanceLoss'](feature, target) * batchIndex / float(len(train_loader))
-
-        loss_ = loss1_ + loss2_ + loss3_ + loss4_ + loss5_
-
-        loss.update(loss_.item(), input.size(0))
-        loss1.update(loss1_.item(), input.size(0))
-        loss2.update(loss2_.item(), input.size(0))
-        loss3.update(loss3_.item(), input.size(0))
-        loss4.update(loss4_.item(), input.size(0))
-        loss5.update(loss5_.item(), input.size(0))
-
-        # Backward
-        loss_.backward()
-        optimizer.step()
-        optimizer.zero_grad()
-
-        # Log time of batch
-        batch_time.update(time.time() - end)
-        end = time.time()
-
-        if batchIndex % args.printFreq == 0:
-            logger.info('[Train] [Epoch {0}]: [{1:04d}/{2}] Batch Time {batch_time.avg:.3f} Data Time {data_time.avg:.3f}\n'
-                        '\t\t\t\t\tIntra Margin {intraMargin:.3f} Inter Margin {interMargin:.3f} Learn Rate {lr:.6f} BCE Loss {loss1.val:.4f} ({loss1.avg:.4f})\n'
-                        '\t\t\t\t\tIntra BCE Loss {loss2.val:.4f} ({loss2.avg:.4f}) Intra Co-occurrence Loss {loss3.val:.4f} ({loss3.avg:.4f})\n'
-                        '\t\t\t\t\tInter BCE Loss {loss4.val:.4f} ({loss4.avg:.4f}) Inter Distance Loss {loss5.val:.4f} ({loss5.avg:.4f})'.format(
-                        epoch, batchIndex, len(train_loader), batch_time=batch_time, data_time=data_time,
-                        intraMargin=args.intraBCEMargin, interMargin=args.interBCEMargin, lr=optimizer.param_groups[0]['lr'],
-                        loss1=loss1, loss2=loss2, loss3=loss3, loss4=loss4, loss5=loss5))
-            sys.stdout.flush()
+            input, target = input.cuda(), target.float().cuda()
+    
+            # Log time of loading data
+            data_time.update(time.time() - end)
+    
+            # Forward
+            output, intraCoOccurrence, feature = model(input)
+    
+            model.updateFeature(feature, target, args.interExampleNumber)
+    
+            intraTarget = getIntraPseudoLabel(intraCoOccurrence,
+                                              target,
+                                              margin=args.intraBCEMargin) if epoch >= args.generateLabelEpoch else target
+            
+            interTarget = getInterPseudoLabel(feature, target,
+                                              model.posFeature,
+                                              margin=args.interBCEMargin) if epoch >= args.generateLabelEpoch else target
+            
+            # Compute and log loss
+            loss1_ = criterion['BCELoss'](output, target)
+    
+            loss2_ = args.intraBCEWeight * criterion['IntraBCELoss'](output, intraTarget) if epoch >= args.generateLabelEpoch else \
+                     0 * criterion['IntraBCELoss'](output, intraTarget)
+            loss3_ = args.intraCooccurrenceWeight * criterion['IntraCooccurrenceLoss'](intraCoOccurrence, target) if epoch >= 1 else \
+                     args.intraCooccurrenceWeight * criterion['IntraCooccurrenceLoss'](intraCoOccurrence, target) * batchIndex / float(len(train_loader))
+    
+            loss4_ = args.interBCEWeight * criterion['InterBCELoss'](output, interTarget) if epoch >= args.generateLabelEpoch else \
+                     0 * criterion['InterBCELoss'](output, interTarget)
+            loss5_ = args.interDistanceWeight * criterion['InterDistanceLoss'](feature, target) if epoch >= 1 else \
+                     args.interDistanceWeight * criterion['InterDistanceLoss'](feature, target) * batchIndex / float(len(train_loader))
+    
+            loss_ = loss1_ + loss2_ + loss3_ + loss4_ + loss5_
+    
+            loss.update(loss_.item(), input.size(0))
+            loss1.update(loss1_.item(), input.size(0))
+            loss2.update(loss2_.item(), input.size(0))
+            loss3.update(loss3_.item(), input.size(0))
+            loss4.update(loss4_.item(), input.size(0))
+            loss5.update(loss5_.item(), input.size(0))
+    
+            # Backward
+            loss_.backward()
+            optimizer.step()
+            optimizer.zero_grad()
+    
+            # Log time of batch
+            batch_time.update(time.time() - end)
+            end = time.time()
+    
+            if batchIndex % args.printFreq == 0:
+                logger.info('[Train] [Epoch {0}]: [{1:04d}/{2}] Batch Time {batch_time.avg:.3f} Data Time {data_time.avg:.3f}\n'
+                            '\t\t\t\t\tIntra Margin {intraMargin:.3f} Inter Margin {interMargin:.3f} Learn Rate {lr:.6f} BCE Loss {loss1.val:.4f} ({loss1.avg:.4f})\n'
+                            '\t\t\t\t\tIntra BCE Loss {loss2.val:.4f} ({loss2.avg:.4f}) Intra Co-occurrence Loss {loss3.val:.4f} ({loss3.avg:.4f})\n'
+                            '\t\t\t\t\tInter BCE Loss {loss4.val:.4f} ({loss4.avg:.4f}) Inter Distance Loss {loss5.val:.4f} ({loss5.avg:.4f})'.format(
+                            epoch, batchIndex, len(train_loader), batch_time=batch_time, data_time=data_time,
+                            intraMargin=args.intraBCEMargin, interMargin=args.interBCEMargin, lr=optimizer.param_groups[0]['lr'],
+                            loss1=loss1, loss2=loss2, loss3=loss3, loss4=loss4, loss5=loss5))
+                sys.stdout.flush()
+        except Exception as e:
+            print(e)
+            continue
 
     writer.add_scalar('Loss', loss.avg, epoch)
     writer.add_scalar('Loss_BCE', loss1.avg, epoch)
@@ -209,39 +213,43 @@ def Validate(val_loader, model, criterion, epoch, args):
 
     end = time.time()
     for batchIndex, (sampleIndex, input, target, groundTruth) in enumerate(val_loader):
+        try:
 
-        input, target = input.cuda(), target.float().cuda()
-        
-        # Log time of loading data
-        data_time.update(time.time()-end)
-
-        # Forward
-        with torch.no_grad():
-            output, intraCoOccurrence, feature = model(input)
-
-        # Compute loss and prediction
-        loss_ = criterion['BCELoss'](output, target)
-        loss.update(loss_.item(), input.size(0))
-
-        # Change target to [0, 1]
-        target[target < 0] = 0
-
-        apMeter.add(output, target)
-        pred.append(torch.cat((output, (target>0).float()), 1))
-
-        # Log time of batch
-        batch_time.update(time.time() - end)
-        end = time.time()
-
-        # logger.info information of current batch        
-        if batchIndex % args.printFreq == 0:
-            logger.info('[Test] [Epoch {0}]: [{1:04d}/{2}] '
-                        'Batch Time {batch_time.avg:.3f} Data Time {data_time.avg:.3f} '
-                        'Loss {loss.val:.4f} ({loss.avg:.4f})'.format(
-                epoch, batchIndex, len(val_loader),
-                batch_time=batch_time, data_time=data_time,
-                loss=loss))
-            sys.stdout.flush()
+            input, target = input.cuda(), target.float().cuda()
+            
+            # Log time of loading data
+            data_time.update(time.time()-end)
+    
+            # Forward
+            with torch.no_grad():
+                output, intraCoOccurrence, feature = model(input)
+    
+            # Compute loss and prediction
+            loss_ = criterion['BCELoss'](output, target)
+            loss.update(loss_.item(), input.size(0))
+    
+            # Change target to [0, 1]
+            target[target < 0] = 0
+    
+            apMeter.add(output, target)
+            pred.append(torch.cat((output, (target>0).float()), 1))
+    
+            # Log time of batch
+            batch_time.update(time.time() - end)
+            end = time.time()
+    
+            # logger.info information of current batch        
+            if batchIndex % args.printFreq == 0:
+                logger.info('[Test] [Epoch {0}]: [{1:04d}/{2}] '
+                            'Batch Time {batch_time.avg:.3f} Data Time {data_time.avg:.3f} '
+                            'Loss {loss.val:.4f} ({loss.avg:.4f})'.format(
+                    epoch, batchIndex, len(val_loader),
+                    batch_time=batch_time, data_time=data_time,
+                    loss=loss))
+                sys.stdout.flush()
+        except Exception as e:
+            print(e)
+            continue
 
     pred = torch.cat(pred, 0).cpu().clone().numpy()
     mAP = Compute_mAP_VOC2012(pred, args.classNum)
