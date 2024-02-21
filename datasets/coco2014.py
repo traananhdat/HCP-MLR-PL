@@ -30,7 +30,7 @@ class COCO2014(data.Dataset):
         self.coco = COCO(anno_path)
         self.ids = list(self.coco.imgs.keys())
      
-        with open('./data/coco/category.json','r') as load_category:
+        with open('/kaggle/input/coco-data/data/coco/category.json','r') as load_category:
             self.category_map = json.load(load_category)
 
         # labels : numpy.ndarray, shape->(len(coco), 80)
@@ -124,9 +124,9 @@ def getCoOccurrenceLabel(mode):
     assert mode in ('train', 'val')
 
     if mode == 'train':
-        label_path = './data/coco/train_label_vectors.npy'
+        label_path = '/kaggle/input/coco-data/data/coco/train_label_vectors.npy'
     else:
-        label_path = './data/coco/val_label_vectors.npy'
+        label_path = '/kaggle/input/coco-data/data/coco/val_label_vectors.npy'
 
     labels = np.load(label_path).astype(np.float64)
 
@@ -141,7 +141,7 @@ def getCoOccurrenceLabel(mode):
                     coOccurrenceLabel[index, index_] = 1
                 index_ += 1
 
-    np.save('./data/coco/{}_co-occurrence_label_vectors.npy'.format(mode), coOccurrenceLabel)
+    np.save('/kaggle/input/coco-data/data/coco/{}_co-occurrence_label_vectors.npy'.format(mode), coOccurrenceLabel)
 
 
 def getPairIndexes(labels):
