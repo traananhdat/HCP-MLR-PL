@@ -13,9 +13,9 @@ logger.setLevel(logging.INFO)
 
 # Dataset Path
 # =============================================================================
-prefixPathCOCO = '/data1/dataset/MS-COCO_2014/'
-prefixPathVG = '/data5/VG/'
-prefixPathVOC2007 = '/data1/dataset/voc2007/VOCdevkit/VOC2007/'
+prefixPathCOCO = '/kaggle/input/coco-data/data/coco/'
+prefixPathVG = '/kaggle/input/coco-data/data/vg/'
+prefixPathVOC2007 = '/kaggle/input/coco-data/data/voc_devkit/VOC2007/'
 # =============================================================================
 
 # ClassNum of Dataset
