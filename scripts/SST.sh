@@ -12,7 +12,7 @@ mode='SST'
 dataset='COCO2014'
 prob=0.5
 
-pretrainedModel='./data/checkpoint/resnet101.pth'
+pretrainedModel='/kaggle/input/coco-data/data/checkpoint/resnet101.pth'
 resumeModel='None'
 evaluate='False'
 
