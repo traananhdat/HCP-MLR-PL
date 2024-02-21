@@ -93,7 +93,7 @@ def getLabel(mode):
         image_dir, anno_path = test_dir, test_anno
 
     coco = datasets.CocoDetection(root=image_dir, annFile=anno_path)
-    with open('./data/coco/category.json', 'r') as load_category:
+    with open('/kaggle/input/coco-data/data/coco/category.json', 'r') as load_category:
         category_map = json.load(load_category)
 
     labels = []
@@ -101,7 +101,7 @@ def getLabel(mode):
         labels.append(getLabelVector(getCategoryList(coco[i][1]), category_map))
     labels = np.array(labels).astype(np.float64)
 
-    np.save('./data/coco/{}_label_vectors.npy'.format(mode), labels)
+    np.save('/kaggle/input/coco-data/data/coco/{}_label_vectors.npy'.format(mode), labels)
 
 
 def changeLabelProportion(labels, label_proportion):
