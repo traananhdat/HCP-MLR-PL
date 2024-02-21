@@ -32,13 +32,13 @@ def get_graph_and_word_file(args, labels):
         return graph
 
     if args.dataset == 'COCO2014':
-        WordFilePath = './data/coco/vectors.npy'
+        WordFilePath = '/kaggle/input/coco-data/data/coco/vectors.npy'
         
     elif args.dataset == 'VG':
-        WordFilePath = './data/vg/vg_200_vector.npy'
+        WordFilePath = '/kaggle/input/coco-data/data/vg/vg_200_vector.npy'
 
     elif args.dataset == 'VOC2007':
-        WordFilePath = './data/voc_devkit/VOC2007/voc07_vector.npy'
+        WordFilePath = '/kaggle/input/coco-data/data/voc_devkit/VOC2007/voc07_vector.npy'
         
     GraphFile = get_graph_file(labels)
     WordFile = np.load(WordFilePath)
