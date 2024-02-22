@@ -9,7 +9,8 @@ post='SST-COCO'
 printFreq=1000
 
 mode='SST'
-dataset='COCO2014'
+dataset='VG'
+# dataset='COCO2014'
 prob=0.5
 
 pretrainedModel='/kaggle/input/coco-data/data/checkpoint/resnet101.pth'
