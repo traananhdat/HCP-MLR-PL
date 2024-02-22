@@ -97,25 +97,29 @@ def main():
     writer = SummaryWriter('{}/{}'.format('exp/summary/', args.post))
 
     for epoch in range(args.startEpoch, args.startEpoch + args.epochs):
+        try:
 
-        Train(train_loader, model, criterion, optimizer, writer, epoch, args)
-        mAP = Validate(test_loader, model, criterion, epoch, args)
-
-        if epoch >= args.generateLabelEpoch:
-            args.intraBCEMargin, args.interBCEMargin = max(0.75, args.intraBCEMargin - 0.025), max(0.75, args.interBCEMargin-0.025)
-            criterion['IntraBCELoss'], criterion['InterBCELoss'] = BCELoss(margin=args.intraBCEMargin, reduce=True, size_average=True).cuda(), \
-                                                                   BCELoss(margin=args.interBCEMargin, reduce=True, size_average=True).cuda()
-
-        scheduler.step()
-
-        writer.add_scalar('mAP', mAP, epoch)
-        torch.cuda.empty_cache()
-
-        isBest, bestPrec = mAP > bestPrec, max(mAP, bestPrec)
-        save_checkpoint(args, {'epoch':epoch, 'state_dict':model.state_dict(), 'best_mAP':mAP}, isBest)
-
-        if isBest:
-            logger.info('[Best] [Epoch {0}]: Best mAP is {1:.3f}'.format(epoch, bestPrec))
+            Train(train_loader, model, criterion, optimizer, writer, epoch, args)
+            mAP = Validate(test_loader, model, criterion, epoch, args)
+    
+            if epoch >= args.generateLabelEpoch:
+                args.intraBCEMargin, args.interBCEMargin = max(0.75, args.intraBCEMargin - 0.025), max(0.75, args.interBCEMargin-0.025)
+                criterion['IntraBCELoss'], criterion['InterBCELoss'] = BCELoss(margin=args.intraBCEMargin, reduce=True, size_average=True).cuda(), \
+                                                                       BCELoss(margin=args.interBCEMargin, reduce=True, size_average=True).cuda()
+    
+            scheduler.step()
+    
+            writer.add_scalar('mAP', mAP, epoch)
+            torch.cuda.empty_cache()
+    
+            isBest, bestPrec = mAP > bestPrec, max(mAP, bestPrec)
+            save_checkpoint(args, {'epoch':epoch, 'state_dict':model.state_dict(), 'best_mAP':mAP}, isBest)
+    
+            if isBest:
+                logger.info('[Best] [Epoch {0}]: Best mAP is {1:.3f}'.format(epoch, bestPrec))
+        except Exception as e:
+            print(e)
+            continue
 
     writer.close()
 
