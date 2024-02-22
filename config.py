@@ -14,7 +14,7 @@ logger.setLevel(logging.INFO)
 # Dataset Path
 # =============================================================================
 prefixPathCOCO = '/kaggle/input/coco-2014-dataset-for-yolov3/coco2014/'
-prefixPathVG = '/kaggle/input/coco-data/data/vg/'
+prefixPathVG = '/kaggle/input/visualgenome/images/'
 prefixPathVOC2007 = '/kaggle/input/coco-data/data/voc_devkit/VOC2007/'
 # =============================================================================
 
