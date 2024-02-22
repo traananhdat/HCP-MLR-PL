@@ -48,9 +48,9 @@ def get_graph_and_word_file(args, labels):
 def get_data_path(dataset):
 
     if dataset == 'COCO2014':
-        prefixPath = prefixPathCOCO
-        train_dir, train_anno, train_label = os.path.join(prefixPath, 'images/train2014'), os.path.join(prefixPath, 'annotations/instances_train2014.json'), '/kaggle/input/coco-data/data/coco/train_label_vectors.npy'
-        test_dir, test_anno, test_label = os.path.join(prefixPath, 'images/val2014'), os.path.join(prefixPath, 'annotations/instances_val2014.json'), '/kaggle/input/coco-data/data/coco/val_label_vectors.npy'
+        prefixPath = prefixPathCOCO 
+        train_dir, train_anno, train_label = os.path.join(prefixPath, 'train2014/train2014'), os.path.join(prefixPath, 'captions/annotations/instances_train2014.json'), '/kaggle/input/coco-data/data/coco/train_label_vectors.npy'
+        test_dir, test_anno, test_label = os.path.join(prefixPath, 'val2014/val2014'), os.path.join(prefixPath, 'captions/annotations/instances_val2014.json'), '/kaggle/input/coco-data/data/coco/val_label_vectors.npy'
 
     elif dataset == 'VG':
         prefixPath = prefixPathVG
