@@ -49,8 +49,8 @@ def get_data_path(dataset):
 
     if dataset == 'COCO2014':
         prefixPath = prefixPathCOCO
-        train_dir, train_anno, train_label = os.path.join(prefixPath, 'train2014'), os.path.join(prefixPath, 'annotations/instances_train2014_seen_48_17.json'), '/kaggle/input/coco-data/data/coco/train_label_vectors.npy'
-        test_dir, test_anno, test_label = os.path.join(prefixPath, 'val2014'), os.path.join(prefixPath, 'annotations/instances_val2014_unseen_48_17.json'), '/kaggle/input/coco-data/data/coco/val_label_vectors.npy'
+        train_dir, train_anno, train_label = os.path.join(prefixPath, 'images/train2014'), os.path.join(prefixPath, 'annotations/instances_train2014.json'), '/kaggle/input/coco-data/data/coco/train_label_vectors.npy'
+        test_dir, test_anno, test_label = os.path.join(prefixPath, 'images/val2014'), os.path.join(prefixPath, 'annotations/instances_val2014.json'), '/kaggle/input/coco-data/data/coco/val_label_vectors.npy'
 
     elif dataset == 'VG':
         prefixPath = prefixPathVG
