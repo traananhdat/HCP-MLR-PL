@@ -54,8 +54,8 @@ def get_data_path(dataset):
 
     elif dataset == 'VG':
         prefixPath = prefixPathVG
-        train_dir, train_anno, train_label = os.path.join(prefixPath, 'VG_100K'), '/kaggle/input/coco-data/data/vg/train_list_500.txt', '/kaggle/input/coco-data/data/vg/vg_category_200_labels_index.json'
-        test_dir, test_anno, test_label = os.path.join(prefixPath, 'VG_100K'), '/kaggle/input/coco-data/data/vg/test_list_500.txt', '/kaggle/input/coco-data/data/vg/vg_category_200_labels_index.json'
+        train_dir, train_anno, train_label = os.path.join(prefixPath, 'VG_100K_2'), '/kaggle/input/coco-data/data/vg/train_list_500.txt', '/kaggle/input/coco-data/data/vg/vg_category_200_labels_index.json'
+        test_dir, test_anno, test_label = os.path.join(prefixPath, 'VG_100K_2'), '/kaggle/input/coco-data/data/vg/test_list_500.txt', '/kaggle/input/coco-data/data/vg/vg_category_200_labels_index.json'
 
     elif dataset == 'VOC2007':
         prefixPath = prefixPathVOC2007
